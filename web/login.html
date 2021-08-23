@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>网站登录页</title>
+    <!--要使用layui，需要引入一个js 和 一个 css-->
+    <script src="layui-v2.5.6/layui/layui.js"></script>
+    <link rel="stylesheet" href="layui-v2.5.6/layui/css/layui.css">
+</head>
+<body>
+
+<!--以后开发要用html-->
+<div>
+    <form class="layui-form" action="" lay-filter="testform" onsubmit="return false">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-inline">
+                <!--required 必须填写-->
+                <input type="text" name="username" required  lay-verify="required" placeholder="请输入账号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label></label>
+            <div class="layui-input-inline">
+                <!--required 必须填写-->
+                <input type="password" name="userpwd" required  lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">验证码</label></label>
+            <div class="layui-input-inline">
+                <input type="text" name="code" class="layui-input">
+                <!--其实验证码就是一个servlet-->
+                <!--点击图片，更换验证码-->
+                <img src="/CodeServlet" style="width:70px;height: 30px" alt="验证码" onclick="this.src=this.src+'?'+Math.random()"  id="img">
+                <a href="#" onclick="document.getElementById('img').onclick()">看不清换一张</a><br/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formLogin">登录</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(['form','jquery','layer'],function () {
+        var form=layui.form;
+        var layer = layui.layer;
+        var $=layui.jquery;
+        form.on('submit(formLogin)', function(data){
+            // console.log('data是什么')
+            // console.log(data)
+            // console.log('data.elem 原始对象')
+            // console.log(data.elem); //原始DOM对象
+            // console.log('data.value 被选中的值')
+            // console.log(data.value); //被选中的值
+            // console.log('data.othis 美化后的DOM对象')
+            // console.log(data.othis); //美化后的DOM对象
+            // console.log('data.field data中form下的name属性')
+            console.log(data.field) //data中form下的name属性
+            // console.log('data.userName data中form下的name=username属性中的值')
+            // console.log(data.userName) //name=userName属性
+            $.ajax({
+                url:'/LoginServlet',
+                type:'POST',
+                data:data.field,
+                success:function (res) {
+                    console.log(res)
+                    if (res.code==400){
+                        layer.msg(res.msg)
+                    }
+                    if (res.code==4001){
+                        layer.msg(res.msg)
+                    }
+                    if (res.code==0){
+                        //需要跳转到 后台界面,前后端分离，页面跳转到由前端负责， 单体项目，页面跳转有后端负责
+                        window.location.href = "/home.html"
+                    }
+                },
+                dataType:'json'
+            });
+
+            // function changeImg() {
+            //     document.getElementById("img").src = "/CodeServlet?d=" + Math.random();
+            // }
+        });
+    });
+
+</script>
+
+</body>
+</html>

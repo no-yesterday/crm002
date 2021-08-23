@@ -28,7 +28,7 @@ public class LoginSessionFilter implements Filter {
         HttpSession session = request.getSession();
         Object user = (User) session.getAttribute("user");
         System.out.println("user = " + user);
-        StringBuffer requestURL = request.getRequestURL();
+        StringBuffer requestURL = request.getRequestURL(); 
         //就是 login.html 的地址
         System.out.println("requestURL = " + requestURL);
         if(requestURL.equals("/login.html")
